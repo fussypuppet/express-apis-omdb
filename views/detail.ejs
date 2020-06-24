@@ -1,7 +1,12 @@
 <% // Render individual movie details here %>
 <% // This is how to do comments in EJS, by the way... %>
 <h1>Movie Information</h1>
-<p>Title: <%= thisResult.Title %></p>
+<p>
+    Title: <%= thisResult.Title %>
+    <% for(let i=0; i<Math.floor(thisResult.imdbRating); i++){ %>
+        <img class='star' src='https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Star*.svg/1117px-Star*.svg.png' alt='star'>
+    <% } %>
+</p>
 <p>Released: <%= thisResult.Released %></p>
 <p>Rating: <%= thisResult.Rated %></p>
 <p>Runtime: <%= thisResult.Runtime %></p>
@@ -9,5 +14,15 @@
 <p>Director: <%= thisResult.Director %></p>
 <p>Plot: <%= thisResult.Plot %></p>
 <p>Awards: <%= thisResult.Awards %></p>
+<% thisResult.Ratings.forEach(thisRating => { %>
+    <% if (thisRating.Source === "Rotten Tomatoes") { %>
+        <p>Rotten Tomatoes rating: <%= thisRating.Value %></p>
+    <% } %>
+<% }) %>
 <img src="<%= thisResult.Poster %>" alt='movie poster image'>
 <%= thisResult %>
+<form method="POST" action='/faves'>
+    <input type='hidden' name='title' value="<%= thisResult.Title %>">
+    <input type='hidden' name='imdbid' value="<%= thisResult.imdbID %>">
+    <input type='submit' value='Add to favorites'>
+</form>

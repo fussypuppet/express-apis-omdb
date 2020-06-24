@@ -1,0 +1,5 @@
+<h1>Favorites List</h1>
+<ul>
+<% faves.forEach(thisFave => { %>
+    <li><a href="<%= `/movies/${thisFave.imdbid}` %>"><%= thisFave.title %></a></li>
+<% }) %>

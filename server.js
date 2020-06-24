@@ -3,11 +3,13 @@ const axios = require('axios');
 const express = require('express');
 const ejsLayouts = require('express-ejs-layouts');
 const app = express();
+const db = require('./models');
+const fs = require('fs');
 
 // Sets EJS as the view engine
 app.set('view engine', 'ejs');
 // Specifies the location of the static assets folder
-app.use(express.static('static'));
+app.use(express.static(__dirname + '/static'));
 // Sets up body-parser for parsing form data
 app.use(express.urlencoded({ extended: false }));
 // Enables EJS Layouts middleware
@@ -42,6 +44,22 @@ app.get('/movies/:id', (req,res) => {
     let thisResult = response.data;
     res.render('detail', {thisResult})
   }).catch(errorHandler);
+})
+
+app.post('/faves', (req, res) => {
+  db.fave.create({
+    title: req.body.title,
+    imdbid: req.body.imdbid
+  }).then(addedFave => {
+    console.log(`🧮🧮 fave ${addedFave.title} added 🧮🧮`);
+    res.redirect(`/faves`);
+  }).catch(errorHandler);
+})
+app.get('/faves', (req, res) => {
+  db.fave.findAll()
+    .then(faves => {
+      res.render('faves', {faves});
+    }).catch(errorHandler);
 })
 
 
